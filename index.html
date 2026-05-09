@@ -3,166 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XQ Studio® | Hub & Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>XQ Studio® | Secure Recruitment</title>
     <style>
-        :root { --xq-orange: #ff9900; --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --terminal: #000; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        :root { --xq-orange: #ff9900; --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --term-green: #00ff41; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        .main-container { width: 100%; max-width: 900px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        h1 { color: var(--xq-orange); text-align: center; margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .info-text { text-align: center; font-size: 13px; color: #8b949e; margin-bottom: 20px; }
         
-        /* GUI Form */
-        .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; height: 500px; display: flex; flex-direction: column; }
-        h2 { color: var(--xq-orange); margin-top: 0; font-size: 18px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        input, select { background: #0d1117; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; outline: none; width: 100%; box-sizing: border-box; }
-        .btn-apply { background: var(--xq-orange); color: black; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-apply:hover { opacity: 0.8; }
-        .btn-apply:disabled { background: #333; color: #777; cursor: not-allowed; }
+        input, select, button { width: 100%; padding: 12px; margin-top: 10px; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; color: white; box-sizing: border-box; }
+        button { background: var(--xq-orange); color: black; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; }
+        button:hover { opacity: 0.8; }
+        
+        /* Terminal Style */
+        .terminal { background: #000; border: 1px solid var(--term-green); border-radius: 8px; width: 100%; max-width: 600px; height: 200px; padding: 15px; font-family: 'Courier New', monospace; font-size: 14px; overflow-y: auto; color: var(--term-green); box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); }
+        .term-input-line { display: flex; margin-top: 5px; }
+        #term-input { background: transparent; border: none; color: var(--term-green); flex: 1; outline: none; font-family: inherit; }
+        .term-output { margin-bottom: 5px; white-space: pre-wrap; }
 
-        /* Terminal */
-        .terminal { background: var(--terminal); border: 1px solid var(--border); border-radius: 12px; padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 13px; height: 500px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .term-output { flex: 1; overflow-y: auto; color: #00ff41; margin-bottom: 10px; }
-        .term-input-line { display: flex; color: #00ff41; }
-        #cmd-input { background: transparent; border: none; color: #00ff41; flex: 1; outline: none; font-family: inherit; }
-
-        .status-msg { font-size: 12px; margin-top: 10px; text-align: center; }
-        .error { color: #ff4444; }
-        .success { color: #00ff41; }
+        .success-box { border: 1px dashed #238636; padding: 15px; text-align: center; color: #34a853; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<div style="text-align: center; margin-bottom: 30px;">
-    <h1 style="color: var(--xq-orange); margin: 0;">XQ STUDIO® RECRUITMENT</h1>
-    <p style="font-size: 14px; opacity: 0.7;">Visual Studio Insiders 2026 & AI-Driven Development Platform</p>
+<div class="container" id="main-ui">
+    <h1>XQ STUDIO® PORTAL</h1>
+    <p class="info-text">Başvurular 5 gün içinde yanıtlanır.</p>
+
+    <div id="form-area">
+        <input type="text" id="name" placeholder="Ad Soyad">
+        <input type="number" id="age" placeholder="Yaş (10-18)">
+        <select id="role">
+            <option value="Developer">Kodlama (20 Kişi)</option>
+            <option value="Security">Güvenlik/Araştırma (15 Kişi)</option>
+        </select>
+        <div style="font-size: 11px; margin-top: 10px; color: #8b949e;">
+            <input type="checkbox" id="accept" style="width: auto;"> Şartları kabul ediyorum (Maaş yok, AI serbest, VS 2026/DC PC zorunlu).
+        </div>
+        <button onclick="submitForm()">BAŞVURUYU TAMAMLA</button>
+    </div>
+    <div id="status-msg"></div>
 </div>
 
-<div class="main-container">
-    <!-- GUI Kısımı -->
-    <div class="panel" id="gui-panel">
-        <h2>Hızlı Başvuru</h2>
-        <div id="form-body">
-            <input type="text" id="name" placeholder="İsim Soyisim">
-            <input type="number" id="age" placeholder="Yaş (10-18)">
-            <select id="role">
-                <option value="Geliştirici (20 Kişi)">Geliştirici (20 Kişi - AI Serbest)</option>
-                <option value="Güvenlik (15 Kişi)">Güvenlik & Analiz (15 Kişi)</option>
-            </select>
-            <div style="font-size: 11px; margin-bottom: 15px;">
-                <input type="checkbox" id="accept" style="width: auto; margin-bottom: 0;"> Şartları kabul ediyorum (Maaş yok, VS 2026 Zorunlu)
-            </div>
-            <button class="btn-apply" onclick="submitApp('GUI')">BAŞVURUYU TAMAMLA</button>
-            <p class="status-msg">Yanıtlar 5 gün içinde Discord üzerinden iletilir.</p>
-        </div>
+<!-- Terminal Area -->
+<div class="terminal" id="terminal-box" onclick="document.getElementById('term-input').focus()">
+    <div id="term-history">
+        <div class="term-output">XQ_OS [Version 1.0.2] - Burak Kernel Dev.</div>
+        <div class="term-output" style="color: #8b949e;">Yardım için '.help' yazın.</div>
     </div>
-
-    <!-- Terminal Kısımı -->
-    <div class="terminal" onclick="document.getElementById('cmd-input').focus()">
-        <div class="term-output" id="term-out">
-            <div>XQ-OS v1.0.2 Loading... OK</div>
-            <div>Yardım için '.help' yazın.</div>
-        </div>
-        <div class="term-input-line">
-            <span>root@xq_studio:~$</span>
-            <input type="text" id="cmd-input" autofocus autocomplete="off">
-        </div>
+    <div class="term-input-line">
+        <span>XQ@ROOT:~$</span>
+        <input type="text" id="term-input" autocomplete="off">
     </div>
 </div>
 
 <script>
     const webhookURL = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
+    const termInput = document.getElementById('term-input');
+    const termHistory = document.getElementById('term-history');
 
-    window.onload = () => {
-        if(localStorage.getItem('xq_applied')) {
-            lockSystem();
+    // Başvuru Kontrolü
+    function checkAppStatus() {
+        if (localStorage.getItem('xq_applied')) {
+            document.getElementById('form-area').innerHTML = `
+                <div class="success-box">
+                    <strong>BAŞVURU BULUNUYOR</strong><br>
+                    Kaydınız alındı. 5 gün içinde yanıt gelecektir.
+                </div>`;
         }
-    };
-
-    function lockSystem() {
-        const msg = "SİSTEM KİLİTLİ: Zaten bir başvurunuz bulunuyor.";
-        document.getElementById('form-body').innerHTML = `<div class='error' style='text-align:center; padding:20px;'>${msg}</div>`;
-        printTerm(msg, "#ff4444");
     }
+    checkAppStatus();
 
-    function printTerm(text, color = "#00ff41") {
-        const out = document.getElementById('term-out');
-        const div = document.createElement('div');
-        div.style.color = color;
-        div.innerText = text;
-        out.appendChild(div);
-        out.scrollTop = out.scrollHeight;
-    }
-
-    document.getElementById('cmd-input').addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') {
-            const val = e.target.value.trim().toLowerCase();
-            printTerm("root@xq_studio:~$ " + val);
-            handleCmd(val);
-            e.target.value = '';
+    // Terminal Mantığı
+    termInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const val = termInput.value.trim().toLowerCase();
+            printTerm(`XQ@ROOT:~$ ${termInput.value}`);
+            
+            if (val === '.help') {
+                printTerm("KOMUTLAR:\n .help      - Yardımı gösterir.\n /kayıt     - Formu odaklar.\n /kaynaklar - VS 2026 detayları.\n /paketler  - OpenGL/sCs++ bilgisi.\n burak11    - Başvuru kaydını SIFIRLAR.");
+            } else if (val === 'burak11') {
+                localStorage.removeItem('xq_applied');
+                printTerm("SİSTEM SIFIRLANDI: Başvuru hakkı tanımlandı.", "yellow");
+                location.reload();
+            } else if (val === '/kaynaklar') {
+                printTerm("- VS Insiders 2026\n- Discord Desktop\n- AI Serbest");
+            } else if (val === '/paketler') {
+                printTerm("- sCs++ Kernel\n- OpenGL 4.6\n- XqXLL Engine");
+            } else {
+                printTerm(`Hata: '${val}' tanınmıyor.`, "red");
+            }
+            
+            termInput.value = '';
+            document.getElementById('terminal-box').scrollTop = document.getElementById('terminal-box').scrollHeight;
         }
     });
 
-    function handleCmd(cmd) {
-        if(cmd === '.help') {
-            printTerm("KOMUTLAR:\n /kayıt - Başvuru başlatır\n /kaynaklar - Teknik detaylar\n /paketler - SDK bilgileri\n clear - Temizle");
-        } else if(cmd === '/kaynaklar') {
-            printTerm("- VS Insiders 2026\n- Discord/WhatsApp PC\n- AI Serbest");
-        } else if(cmd === '/kayıt') {
-            if(localStorage.getItem('xq_applied')) return printTerm("HATA: Zaten başvurdunuz.");
-            const n = prompt("İsim Soyisim:");
-            const a = prompt("Yaş:");
-            if(n && a) submitApp('Terminal', n, a);
-        } else if(cmd === 'clear') {
-            document.getElementById('term-out').innerHTML = '';
-        } else {
-            printTerm("Hata: Komut anlaşılamadı.", "#ff4444");
-        }
+    function printTerm(text, color = 'var(--term-green)') {
+        const div = document.createElement('div');
+        div.className = 'term-output';
+        div.style.color = color;
+        div.innerText = text;
+        termHistory.appendChild(div);
     }
 
-    async function submitApp(type, tName, tAge) {
-        const name = type === 'GUI' ? document.getElementById('name').value : tName;
-        const age = type === 'GUI' ? document.getElementById('age').value : tAge;
+    // Form Gönderimi
+    async function submitForm() {
+        const name = document.getElementById('name').value;
+        const age = document.getElementById('age').value;
         const role = document.getElementById('role').value;
         const accept = document.getElementById('accept').checked;
-        const appId = "XQ-" + Math.floor(1000 + Math.random() * 9000);
+        const appID = "XQ-" + Math.floor(1000 + Math.random() * 9000);
 
-        if(type === 'GUI' && (!name || !age || !accept)) {
-            return alert("Lütfen tüm alanları doldurun ve şartları onaylayın.");
+        if (!name || !age || !accept) {
+            alert("Lütfen tüm alanları doldurun!");
+            return;
         }
 
         const payload = {
-            username: "XQ Studio Recruitment Bot",
+            content: `📢 **Yeni Başvuru Alındı!** (ID: ${appID})`,
             embeds: [{
-                title: "Yeni Başvuru Alındı! ✅",
+                title: "XQ Studio® Aday Formu",
                 color: 16750848,
                 fields: [
-                    { name: "Takip No", value: appId, inline: true },
+                    { name: "Aday ID", value: appID, inline: true },
                     { name: "İsim Soyisim", value: name, inline: true },
                     { name: "Yaş", value: age, inline: true },
                     { name: "Rol", value: role },
-                    { name: "Başvuru Tipi", value: type },
-                    { name: "Karar Ver", value: "[🟢 EKİBE AL](https://discord.com) | [🔴 REDDET](https://discord.com)" }
+                    { name: "Karar", value: "✅ (Al) | ❌ (Reddet)" }
                 ],
-                footer: { text: "XQ Studio - Yanıt süresi: 5 Gün" },
-                timestamp: new Date()
+                footer: { text: "Yanıt süresi: 5 Gün" }
             }]
         };
 
         try {
             await fetch(webhookURL, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
             localStorage.setItem('xq_applied', 'true');
-            printTerm("BAŞARILI: Takip No: " + appId, "#00ff41");
-            alert("Başvurunuz iletildi! Takip Numaranız: " + appId);
-            lockSystem();
-        } catch(e) {
-            printTerm("SİSTEM HATASI: Discord bağlantısı başarısız.", "#ff4444");
+            alert(`Başvurunuz iletildi! ID: ${appID}. 5 gün içinde yanıt gelecektir.`);
+            location.reload();
+        } catch (e) {
+            alert("Hata oluştu!");
         }
     }
 </script>
-
 </body>
 </html>
