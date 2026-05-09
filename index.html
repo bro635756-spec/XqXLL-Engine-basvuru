@@ -3,50 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XQ Studio® | Neural Recruitment</title>
+    <title>XQ Studio® | Neural Link</title>
     <style>
         :root { --xq-orange: #ff9900; --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --term-green: #00ff41; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
-        h1 { color: var(--xq-orange); text-align: center; margin: 0; font-size: 22px; text-transform: uppercase; }
+        h1 { color: var(--xq-orange); text-align: center; margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; }
         .info-text { text-align: center; font-size: 13px; color: #8b949e; margin-bottom: 20px; }
-        input, select, button { width: 100%; padding: 12px; margin-top: 10px; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; color: white; box-sizing: border-box; border: 1px solid var(--border); }
+        input, select, button { width: 100%; padding: 12px; margin-top: 10px; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; color: white; box-sizing: border-box; }
         button { background: var(--xq-orange); color: black; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; }
-        button:hover { opacity: 0.8; }
+        button:hover { opacity: 0.8; transform: translateY(-1px); }
         .terminal { background: #000; border: 1px solid var(--term-green); border-radius: 8px; width: 100%; max-width: 600px; height: 180px; padding: 15px; font-family: 'Courier New', monospace; font-size: 14px; overflow-y: auto; color: var(--term-green); }
-        #term-input { background: transparent; border: none; color: var(--term-green); outline: none; width: 80%; }
-        .status-badge { padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-top: 10px; border: 1px solid; }
+        #term-input { background: transparent; border: none; color: var(--term-green); outline: none; width: 80%; padding: 0; margin: 0; }
+        .status-badge { padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; margin-top: 10px; border: 1px solid; font-size: 18px; }
         .pending { color: #f1c40f; border-color: #f1c40f; background: rgba(241, 196, 15, 0.1); }
-        .accepted { color: #2ecc71; border-color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
+        .accepted { color: #2ecc71; border-color: #2ecc71; background: rgba(46, 204, 113, 0.1); box-shadow: 0 0 20px rgba(46, 204, 113, 0.2); }
         .rejected { color: #e74c3c; border-color: #e74c3c; background: rgba(231, 76, 60, 0.1); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>XQ STUDIO® PORTAL</h1>
-    <p class="info-text">Başvuru Takip Sistemi v1.0.3</p>
+    <h1>XQ STUDIO®</h1>
+    <p class="info-text">Real-Time Recruitment System v1.0.4</p>
 
     <div id="ui-content">
-        <!-- Form veya Durum Buraya Gelecek -->
         <input type="text" id="name" placeholder="Ad Soyad">
         <input type="number" id="age" placeholder="Yaş">
         <select id="role">
             <option value="Developer">Geliştirici (sCs++ / AI Serbest)</option>
             <option value="Security">Güvenlik & Analiz</option>
         </select>
-        <div style="font-size: 11px; margin-top: 10px;">
-            <input type="checkbox" id="accept" style="width: auto;"> Şartları kabul ediyorum.
+        <div style="font-size: 11px; margin-top: 10px; color: #8b949e;">
+            <input type="checkbox" id="accept" style="width: auto;"> Maaşsız çalışmayı, VS 2026 ve Discord PC zorunluluğunu kabul ediyorum.
         </div>
-        <button onclick="submitForm()">SİSTEME KAYDET</button>
+        <button onclick="submitForm()">BAŞVURUYU GÖNDER</button>
     </div>
 </div>
 
-<div class="terminal" id="terminal-box">
+<div class="terminal" id="terminal-box" onclick="document.getElementById('term-input').focus()">
     <div id="term-history">
-        <div>XQ_OS [Kernel.10.3] - Burak Dev.</div>
+        <div>XQ_OS [Kernel.10.4] - Burak Studio Dev.</div>
     </div>
-    <span>XQ@ROOT:~$</span> <input type="text" id="term-input" autocomplete="off">
+    <div style="display: flex;">
+        <span style="margin-right: 5px;">XQ@ROOT:~$</span>
+        <input type="text" id="term-input" autocomplete="off">
+    </div>
 </div>
 
 <script type="module">
@@ -67,62 +69,74 @@
     const db = getDatabase(app);
     const webHook = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
 
-    // Takip ve Durum Kontrolü
+    // Dinamik Durum Kontrolü
     const savedID = localStorage.getItem('xq_app_id');
     if (savedID) {
         const statusRef = ref(db, 'apps/' + savedID);
         onValue(statusRef, (snapshot) => {
             const data = snapshot.val();
-            if (data) updateUIStatus(data.status, savedID);
+            if (data) {
+                updateUIStatus(data.status, savedID);
+            }
         });
     }
 
     function updateUIStatus(status, id) {
-        let html = `<div class="info-text">BAŞVURU ID: ${id}</div>`;
-        if(status === 'beklemede') html += `<div class="status-badge pending">BAŞVURU İNCELENİYOR (5 Gün İçinde Sonuçlanır)</div>`;
-        else if(status === 'onay') html += `<div class="status-badge accepted">TEBRİKLER: EKİBE ALINDIN! (Discord'u Kontrol Et)</div>`;
-        else if(status === 'red') html += `<div class="status-badge rejected">BAŞVURU REDDEDİLDİ. (Kriterlere Uygun Değil)</div>`;
+        let html = `<div class="info-text" style="color:var(--xq-orange)">TAKİP KODU: ${id}</div>`;
+        if(status === 'beklemede') {
+            html += `<div class="status-badge pending">BAŞVURU İNCELENİYOR...<br><small style="font-size:10px">5 gün içinde sonuçlanır.</small></div>`;
+        } else if(status === 'onay') {
+            html += `<div class="status-badge accepted">✅ TEBRİKLER! EKİBE ALINDIN.<br><small style="font-size:10px">Discord üzerinden seninle iletişime geçeceğiz.</small></div>`;
+        } else if(status === 'red') {
+            html += `<div class="status-badge rejected">❌ ÜZGÜNÜZ. BAŞVURU REDDEDİLDİ.<br><small style="font-size:10px">Kriterlerimize şu an için uygun değilsin.</small></div>`;
+        }
         document.getElementById('ui-content').innerHTML = html;
     }
 
-    // Form Gönderimi
+    // Başvuru Gönderimi
     window.submitForm = async () => {
         const name = document.getElementById('name').value;
         const age = document.getElementById('age').value;
         const role = document.getElementById('role').value;
-        if (!name || !age || !document.getElementById('accept').checked) return alert("Eksik bilgi!");
+        if (!name || !age || !document.getElementById('accept').checked) return alert("Lütfen tüm alanları doldurun!");
 
         const appID = "XQ" + Math.floor(1000 + Math.random() * 9000);
         localStorage.setItem('xq_app_id', appID);
 
-        // Firebase Kayıt
+        // Firebase'e 'beklemede' olarak kaydet
         await set(ref(db, 'apps/' + appID), { name, age, role, status: 'beklemede' });
 
-        // Discord Webhook
+        // Discord'a Bilgi Gönder
         await fetch(webHook, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                content: `🚀 **Yeni Başvuru: ${appID}**\nAd: ${name}\nRol: ${role}\n\n*Durumu güncellemek için Firebase Paneline git.*`
+                content: `🚀 **Yeni Başvuru Geldi!**\n**ID:** ${appID}\n**Ad:** ${name}\n**Yaş:** ${age}\n**Rol:** ${role}\n\n**Onaylamak için Firebase'de status kısmını "onay" veya "red" yapın.**`
             })
         });
         location.reload();
     };
 
-    // Terminal Mantığı
+    // Terminal Mantığı (Özel Kod burak11 Gizlendi)
     document.getElementById('term-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const val = e.target.value.trim();
             const hist = document.getElementById('term-history');
+            
             if (val === '.help') {
-                hist.innerHTML += `<div>> .help, /kayıt, /kaynaklar, /paketler</div>`;
+                hist.innerHTML += `<div>> Komutlar: .help, /kayıt, /kaynaklar, /paketler</div>`;
             } else if (val === 'burak11') {
                 localStorage.clear();
-                hist.innerHTML += `<div style="color:yellow">> SİSTEM RESETLENDİ.</div>`;
+                hist.innerHTML += `<div style="color:yellow">> [SİSTEM SIFIRLANDI] Tüm yerel veriler temizlendi.</div>`;
                 setTimeout(() => location.reload(), 1000);
             } else if (val === '/kaynaklar') {
-                hist.innerHTML += `<div>> VS 2026, Discord PC, AI Serbest</div>`;
+                hist.innerHTML += `<div>> Kaynaklar: Visual Studio 2026, Discord PC, AI Modelleri Serbest.</div>`;
+            } else if (val === '/paketler') {
+                hist.innerHTML += `<div>> Paketler: OpenGL 4.6, sCs++ Kernel, XqXLL 3.5D Engine.</div>`;
+            } else {
+                hist.innerHTML += `<div style="color:red">> Hata: '${val}' komutu sistemde kayıtlı değil.</div>`;
             }
+            
             e.target.value = '';
             document.getElementById('terminal-box').scrollTop = 9999;
         }
