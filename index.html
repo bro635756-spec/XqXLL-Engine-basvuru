@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XQ Studio® | Hub</title>
+    <title>XQ Studio® | Developer Portal</title>
     <style>
         :root { 
             --xq-orange: #ff9900; 
@@ -12,78 +12,89 @@
             --border: #30363d; 
             --text: #c9d1d9; 
             --text-dim: #8b949e;
+            --whatsapp: #25D366;
             --discord: #5865F2;
         }
         body { 
             background: var(--bg); 
             background-image: radial-gradient(circle at 50% 0%, #1a1f26 0%, transparent 50%);
             color: var(--text); 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Inter', -apple-system, sans-serif; 
             margin: 0; padding: 20px; 
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         .main-card { 
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
-            padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
-            z-index: 10;
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px; 
+            padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); 
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--xq-orange); margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800; }
+        .header { text-align: center; margin-bottom: 35px; }
+        .header h1 { color: var(--xq-orange); margin: 0; font-size: 30px; letter-spacing: 3px; font-weight: 900; }
         
-        .social-link { 
-            display: flex; align-items: center; justify-content: center; 
-            padding: 14px; border-radius: 10px; text-decoration: none; color: white;
-            font-weight: 600; background: var(--discord); margin-bottom: 25px; transition: 0.3s;
+        .social-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .social-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px; border-radius: 12px; text-decoration: none; color: white;
+            font-weight: 700; font-size: 13px; transition: 0.3s ease;
         }
-        .social-link:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-dc { background: var(--discord); }
+        .btn-wa { background: var(--whatsapp); }
+        .social-btn img { width: 22px; height: 22px; object-fit: contain; }
+        .social-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
         input, select { 
-            width: 100%; padding: 12px; background: #0b0e14; border: 1px solid var(--border); 
-            border-radius: 8px; color: white; box-sizing: border-box; outline: none;
+            width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); 
+            border-radius: 10px; color: white; font-size: 15px; box-sizing: border-box; outline: none; transition: 0.2s;
         }
-        input:focus { border-color: var(--xq-orange); }
+        input:focus { border-color: var(--xq-orange); background: rgba(0,0,0,0.5); }
 
         .btn-submit { 
-            width: 100%; padding: 15px; background: var(--xq-orange); color: black; 
-            border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px;
-            transition: 0.2s;
+            width: 100%; padding: 18px; background: var(--xq-orange); color: black; 
+            border: none; border-radius: 12px; font-weight: 900; font-size: 16px; 
+            cursor: pointer; text-transform: uppercase; transition: 0.3s;
         }
-        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:hover { background: #e68a00; transform: scale(1.02); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .status-box { padding: 25px; border-radius: 12px; text-align: center; border: 1px solid; animation: slideIn 0.4s ease; }
-        .onay { border-color: #2ecc71; color: #2ecc71; background: rgba(46, 204, 113, 0.05); }
-        .bekle { border-color: #f1c40f; color: #f1c40f; background: rgba(241, 196, 15, 0.05); }
+        .status-ui { padding: 30px; border-radius: 15px; text-align: center; border: 2px solid; animation: fadeIn 0.5s ease; }
+        .status-pending { border-color: #f1c40f; background: rgba(241, 196, 15, 0.1); color: #f1c40f; }
+        .status-success { border-color: #2ecc71; background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
         
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
 
 <div class="main-card">
     <div class="header">
-        <h1>XQ STUDIO®</h1>
-        <p style="font-size: 12px; color: var(--text-dim);">Merkezi Başvuru Sistemi</p>
+        <h1>XQ STUDIO</h1>
+        <p style="color: var(--text-dim); font-size: 13px; margin-top: 5px;">Geliştirici Başvuru Portalı</p>
     </div>
 
-    <div id="app-content">
-        <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-link">RESMİ DISCORD SUNUCUSU</a>
+    <div id="dynamic-content">
+        <div class="social-container">
+            <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-btn btn-dc">
+                <img src="logod.png" alt="Discord"> DISCORD
+            </a>
+            <a href="https://whatsapp.com/channel/0029VbCjhhZ8PgsFTg0Fcd3I" target="_blank" class="social-btn btn-wa">
+                <img src="logow.png" alt="WhatsApp"> WHATSAPP
+            </a>
+        </div>
 
         <div class="form-group">
-            <label>AD SOYAD</label>
-            <input type="text" id="name" placeholder="Adınızı giriniz">
+            <label>Ad Soyad</label>
+            <input type="text" id="full_name" placeholder="Örn: Burak XQ">
         </div>
         <div class="form-group">
-            <label>UZMANLIK ALANI</label>
-            <select id="role">
-                <option value="Developer">Yazılım Geliştirici (XqXLL / C++)</option>
-                <option value="Security">Sistem Güvenliği & Kernel</option>
-                <option value="Design">UI/UX Tasarım</option>
+            <label>Uzmanlık Alanı</label>
+            <select id="user_role">
+                <option value="C++ Developer">C++ Developer (XqXLL)</option>
+                <option value="UE5 Expert">Unreal Engine 5 Expert</option>
+                <option value="Security">Cyber Security & Kernel</option>
             </select>
         </div>
-        <button class="btn-submit" id="submitBtn" onclick="submitApp()">BAŞVURUYU GÖNDER</button>
+        <button class="btn-submit" id="submit_trigger" onclick="handleApplication()">BAŞVURUYU GÖNDER</button>
     </div>
 </div>
 
@@ -91,7 +102,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-    const firebaseConfig = {
+    const config = {
         apiKey: "AIzaSyAFtCQjGACAmoOSEIazC648I1BaLPkT8-U",
         authDomain: "share-your-thoughts-e15a7.firebaseapp.com",
         databaseURL: "https://share-your-thoughts-e15a7-default-rtdb.europe-west1.firebasedatabase.app",
@@ -101,81 +112,78 @@
         appId: "1:137665399298:web:60e7087fc41db2670f751b"
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = initializeApp(config);
     const db = getDatabase(app);
-    const webhookURL = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
+    const hook = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
 
-    // GİZLİ SIFIRLAMA KODU: burak11
-    let secret = "";
-    window.addEventListener('keypress', (e) => {
-        secret += e.key;
-        if (secret.includes("burak11")) {
+    // Gizli Sıfırlama: burak11
+    let keys = "";
+    window.addEventListener('keydown', (e) => {
+        keys += e.key;
+        if (keys.includes("burak11")) {
             localStorage.clear();
-            alert("SİSTEM KURUCUSU TARAFINDAN RESETLENDİ.");
+            alert("SİSTEM RESETLENDİ");
             location.reload();
         }
-        if (secret.length > 10) secret = secret.substring(1);
+        if (keys.length > 10) keys = keys.substring(1);
     });
 
-    const savedID = localStorage.getItem('xq_app_id');
-    if (savedID) {
-        onValue(ref(db, 'apps/' + savedID), (snapshot) => {
-            const data = snapshot.val();
-            if (data) renderStatus(data.status, savedID);
+    const activeApp = localStorage.getItem('xq_app_id');
+    if (activeApp) {
+        onValue(ref(db, 'apps/' + activeApp), (snapshot) => {
+            const val = snapshot.val();
+            if (val) showStatus(val.status, activeApp);
         });
     }
 
-    function renderStatus(status, id) {
-        const root = document.getElementById('app-content');
-        let html = `<div style="text-align:center; margin-bottom:15px; font-size:12px; color:var(--text-dim); font-family:monospace;">SESSION_ID: ${id}</div>`;
+    function showStatus(status, id) {
+        const root = document.getElementById('dynamic-content');
+        let html = `<div style="text-align:center; margin-bottom:15px; font-family:monospace; font-size:11px;">AUTH_ID: ${id}</div>`;
         
         if(status === 'beklemede') {
-            html += `<div class="status-box bekle"><h3>BEKLEMEDE</h3><p>Verileriniz XQ Studio havuzuna eklendi.</p></div>`;
+            html += `<div class="status-ui status-pending"><h3>İNCELEME SÜRÜYOR</h3><p>Başvurunuz XQ Studio yöneticilerine iletildi.</p></div>`;
         } else if(status === 'onay' || status === 'admin') {
-            html += `<div class="status-box onay">
-                <h3>ERİŞİM ONAYLANDI</h3>
-                <p>Ekip grubuna katılmaya hak kazandınız.</p>
+            html += `<div class="status-ui status-success">
+                <h3>BAŞVURU KABUL EDİLDİ</h3>
+                <p>Ekibimize hoş geldiniz! Sunucuya giriş yapabilirsiniz.</p>
                 <a href="https://discord.gg/6SG7rsKsRq" target="_blank" style="text-decoration:none">
-                    <button class="btn-submit" style="background:#5865F2; color:white">SUNUCUYA GİRİŞ YAP</button>
+                    <button class="btn-submit" style="background:var(--discord); color:white; margin-top:15px;">DISCORD'A GİRİŞ</button>
                 </a>
             </div>`;
         }
         root.innerHTML = html;
     }
 
-    window.submitApp = async () => {
-        const name = document.getElementById('name').value;
-        const role = document.getElementById('role').value;
-        const btn = document.getElementById('submitBtn');
+    window.handleApplication = async () => {
+        const name = document.getElementById('full_name').value;
+        const role = document.getElementById('user_role').value;
+        const btn = document.getElementById('submit_trigger');
 
-        if(!name || name.length < 3) return alert("Lütfen geçerli bir isim girin.");
+        if(!name || name.length < 3) return alert("Geçerli bir isim giriniz.");
 
         btn.disabled = true;
-        btn.innerText = "GÖNDERİLİYOR...";
+        btn.innerText = "İŞLENİYOR...";
 
-        const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
+        const appID = "XQ-" + Math.floor(1000 + Math.random() * 8999);
         
         try {
-            // 1. Firebase Kaydı
-            await set(ref(db, 'apps/' + id), { name, role, status: 'beklemede' });
-            localStorage.setItem('xq_app_id', id);
+            await set(ref(db, 'apps/' + appID), { name, role, status: 'beklemede' });
+            localStorage.setItem('xq_app_id', appID);
 
-            // 2. Discord Webhook (Keep-Alive ile zorunlu gönderim)
-            await fetch(webhookURL, {
+            // Webhook Gönderimi
+            await fetch(hook, {
                 method: 'POST',
-                mode: 'no-cors', // CORS engelini aşmak için 'no-cors' kullanılır
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    content: `🚀 **XQ Studio Yeni Başvuru**\n**ID:** \`${id}\`\n**İsim:** ${name}\n**Rol:** ${role}\n-------------------------`
+                    content: `📢 **Yeni Başvuru Alındı**\n**Sistem ID:** \`${appID}\`\n**Aday:** ${name}\n**Rol:** ${role}`
                 })
             });
 
             location.reload();
-        } catch (err) {
-            console.error(err);
-            alert("Bir hata oluştu, tekrar deneyin.");
+        } catch (e) {
+            alert("Bağlantı hatası.");
             btn.disabled = false;
-            btn.innerText = "BAŞVURUYU GÖNDER";
         }
     };
 </script>
