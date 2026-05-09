@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XQ Studio® | Terminal Access</title>
+    <style>
+        :root { --term-green: #00ff41; --term-bg: #0a0a0a; --term-dim: #008f11; }
+        body { background-color: var(--term-bg); color: var(--term-green); font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; overflow-x: hidden; }
+        
+        /* GUI Form Üst Kısım */
+        #gui-form { background: #111; border: 1px solid var(--term-dim); padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .form-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        input, button { background: #000; border: 1px solid var(--term-green); color: var(--term-green); padding: 8px; outline: none; }
+        button { cursor: pointer; transition: 0.3s; font-weight: bold; }
+        button:hover { background: var(--term-green); color: #000; }
+        .terms { font-size: 12px; margin-bottom: 10px; display: block; }
+
+        /* Terminal Alanı */
+        #terminal { background: #000; border: 1px solid var(--term-dim); height: 450px; padding: 20px; overflow-y: auto; border-radius: 5px; box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); }
+        .output-line { margin-bottom: 5px; line-height: 1.4; }
+        .input-line { display: flex; align-items: center; margin-top: 10px; }
+        .prompt { margin-right: 10px; }
+        #cmd-input { background: transparent; border: none; color: var(--term-green); flex: 1; font-family: inherit; font-size: 16px; }
+        
+        /* AdMob Alanı */
+        .ads { margin-top: 20px; text-align: center; font-size: 10px; color: var(--term-dim); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--term-dim); }
+    </style>
+</head>
+<body>
+
+<!-- Hızlı GUI Başvuru -->
+<div id="gui-form">
+    <label class="terms">
+        <input type="checkbox" id="gui-accept"> Şartları kabul ediyorum (Maaş yok, AI serbest, VS 2026/Discord PC zorunlu)
+    </label>
+    <div class="form-row">
+        <input type="text" id="gui-name" placeholder="İsim Soyisim">
+        <input type="number" id="gui-age" placeholder="Yaş">
+        <select id="gui-role" style="background:#000; color:var(--term-green); border:1px solid var(--term-green); padding:8px;">
+            <option value="Kodlama">Kodlama (20 Kişi)</option>
+            <option value="Güvenlik">Güvenlik/Araştırma (15 Kişi)</option>
+        </select>
+        <button onclick="submitApplication('GUI')">HIZLI BAŞVUR</button>
+    </div>
+</div>
+
+<!-- Terminal -->
+<div id="terminal" onclick="document.getElementById('cmd-input').focus()">
+    <div class="output-line">XQ Studio (C) 2026 - Kernel v1.0.2-XEO</div>
+    <div class="output-line">Sistem Lideri: Burak</div>
+    <div class="output-line" style="color: yellow;">Yardım almak için '.help' yazın.</div>
+    <div id="history"></div>
+    <div class="input-line">
+        <span class="prompt">XQ-USER@ROOT:~$</span>
+        <input type="text" id="cmd-input" autofocus autocomplete="off">
+    </div>
+</div>
+
+<div class="ads">
+    ca-app-pub-9983936722208859/1612243063 | XQ Studio Global Protection
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAFtCQjGACAmoOSEIazC648I1BaLPkT8-U",
+        authDomain: "share-your-thoughts-e15a7.firebaseapp.com",
+        databaseURL: "https://share-your-thoughts-e15a7-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "share-your-thoughts-e15a7",
+        storageBucket: "share-your-thoughts-e15a7.firebasestorage.app",
+        messagingSenderId: "137665399298",
+        appId: "1:137665399298:web:60e7087fc41db2670f751b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const input = document.getElementById('cmd-input');
+    const history = document.getElementById('history');
+
+    input.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+            const cmd = input.value.trim().toLowerCase();
+            printLine(`XQ-USER@ROOT:~$ ${input.value}`);
+            processCommand(cmd);
+            input.value = '';
+            document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
+        }
+    });
+
+    function printLine(text, color = 'var(--term-green)') {
+        const div = document.createElement('div');
+        div.className = 'output-line';
+        div.style.color = color;
+        div.innerHTML = text;
+        history.appendChild(div);
+    }
+
+    function processCommand(cmd) {
+        if (cmd === '.help') {
+            printLine("Mevcut Komutlar:");
+            printLine(" /kayıt       - Ekibe katılmak için başvuru formunu açar.");
+            printLine(" /kaynaklar   - Kullanılacak donanım ve yazılımları listeler.");
+            printLine(" /paketler    - OpenGL, sCs++ ve motor detaylarını gösterir.");
+            printLine(" clear        - Terminal ekranını temizler.");
+        } 
+        else if (cmd === '/kaynaklar') {
+            printLine("[KAYNAKLAR]");
+            printLine("- Visual Studio Insiders 2026 (Zorunlu)");
+            printLine("- WhatsApp PC & Discord PC (İletişim)");
+            printLine("- AI (ChatGPT/Gemini/Claude) - Kullanımı Serbesttir.");
+        } 
+        else if (cmd === '/paketler') {
+            printLine("[PAKETLER]");
+            printLine("- Grafikler: OpenGL 4.6 / Vulkan SDK");
+            printLine("- Dil: sCs++ (s-Class C Plus Plus)");
+            printLine("- Motor: XqXLL 3.5D Spatial Engine");
+            printLine("- Hook: ScriptHookV Integration");
+        }
+        else if (cmd === '/kayıt') {
+            const name = prompt("İsim Soyisim:");
+            const age = prompt("Yaş:");
+            if(name && age) {
+                submitApplication('Terminal', name, age);
+            }
+        }
+        else if (cmd === 'clear') {
+            history.innerHTML = '';
+        }
+        else {
+            printLine(`Hata: '${cmd}' komutu bulunamadı. Yardım için '.help' yazın.`, 'red');
+        }
+    }
+
+    window.submitApplication = (type, tName = '', tAge = '') => {
+        const isAccepted = document.getElementById('gui-accept').checked;
+        const name = type === 'GUI' ? document.getElementById('gui-name').value : tName;
+        const age = type === 'GUI' ? document.getElementById('gui-age').value : tAge;
+        const role = document.getElementById('gui-role').value;
+
+        if (!isAccepted && type === 'GUI') {
+            alert("Lütfen önce şartları kabul edin.");
+            return;
+        }
+
+        if (name && age) {
+            push(ref(db, 'applications'), {
+                name, age, role, type, timestamp: new Date().toISOString()
+            }).then(() => {
+                printLine(`>> BAŞARI: ${name} için başvuru XQ veritabanına iletildi.`, 'cyan');
+                if(type === 'GUI') alert("Başvurunuz başarıyla iletildi!");
+            });
+        } else {
+            alert("Lütfen tüm alanları doldurun.");
+        }
+    };
+</script>
+
+</body>
+</html>
