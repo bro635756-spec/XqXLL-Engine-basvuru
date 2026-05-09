@@ -83,7 +83,8 @@
             <label>Uzmanlık Alanı</label>
             <select id="user_role" onchange="checkRole()">
                 <option value="">Seçiniz...</option>
-                <option value="XqXLL (C++ & Research)">XqXLL (C++ & Research)</option>
+                <option value="XqXLL Engine Developer (C++)">XqXLL Engine Developer (C++)</option>
+                <option value="Research & Development (Araştırmacı)">Research & Development (Araştırmacı)</option>
             </select>
         </div>
 
@@ -121,6 +122,7 @@ const webhookURL = "https://discord.com/api/webhooks/1502733551802519647/ZB_4VTX
 window.checkRole = () => {
     const role = document.getElementById('user_role').value;
     const box = document.getElementById('ai_question_box');
+    // Eğer C++ geliştirici seçilirse AI sorusu çıkar
     box.style.display = (role.includes("C++")) ? "block" : "none";
 };
 
@@ -142,7 +144,7 @@ document.getElementById("submit_trigger").onclick = async () => {
     const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
     
     try {
-        await set(ref(db, 'apps/' + id), { name, role, method, status: 'beklemede' });
+        await set(ref(db, 'apps/' + id), { name, role, method: (role.includes("C++") ? method : "N/A"), status: 'beklemede' });
         localStorage.setItem('xq_app_id', id);
 
         await fetch(webhookURL, {
@@ -150,7 +152,7 @@ document.getElementById("submit_trigger").onclick = async () => {
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                content: `🚀 **XQ Studio Yeni Başvuru**\n**ID:** \`${id}\`\n**İsim:** ${name}\n**Alan:** ${role}\n**Metod:** ${method}`
+                content: `🚀 **XQ Studio Yeni Başvuru**\n**ID:** \`${id}\`\n**İsim:** ${name}\n**Alan:** ${role}${role.includes("C++") ? `\n**Metod:** ${method}` : ""}`
             })
         });
         location.reload();
