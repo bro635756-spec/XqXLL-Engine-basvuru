@@ -19,7 +19,7 @@
             background: var(--bg); 
             background-image: radial-gradient(circle at 50% 0%, #1a1f26 0%, transparent 50%);
             color: var(--text); 
-            font-family: 'Inter', -apple-system, sans-serif; 
+            font-family: 'Inter', sans-serif; 
             margin: 0; padding: 20px; 
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
@@ -39,9 +39,10 @@
         .btn-dc { background: var(--discord); }
         .btn-wa { background: var(--whatsapp); }
         .social-btn img { width: 22px; height: 22px; object-fit: contain; }
-        .social-btn:hover { transform: translateY(-3px); }
-
+        
         .form-group { margin-bottom: 20px; }
+        .hidden-question { display: none; margin-top: 15px; border-left: 2px solid var(--xq-orange); padding-left: 15px; }
+        
         label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
         input, select { 
             width: 100%; padding: 14px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); 
@@ -51,15 +52,8 @@
 
         .btn-submit { 
             width: 100%; padding: 18px; background: var(--xq-orange); color: black; 
-            border: none; border-radius: 12px; font-weight: 900; font-size: 16px; 
-            cursor: pointer; transition: 0.3s;
+            border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer;
         }
-        .btn-submit:hover { background: #e68a00; }
-
-        .status-ui { padding: 30px; border-radius: 15px; text-align: center; border: 2px solid; animation: fadeIn 0.4s ease; }
-        .status-pending { border-color: #f1c40f; background: rgba(241, 196, 15, 0.1); color: #f1c40f; }
-        .status-success { border-color: #2ecc71; background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -67,7 +61,7 @@
 <div class="main-card">
     <div class="header">
         <h1>XQ STUDIO</h1>
-        <p style="color:var(--text-dim); font-size:13px;">Geliştirici Başvuru Portalı</p>
+        <p style="color:var(--text-dim); font-size:12px;">XqXLL Engine & System Development</p>
     </div>
 
     <div id="dynamic-content">
@@ -87,15 +81,22 @@
 
         <div class="form-group">
             <label>Uzmanlık Alanı</label>
-            <select id="user_role">
-                <option value="C++ Developer (XqXLL)">C++ Developer (XqXLL)</option>
-                <option value="Unreal Engine 5 Expert">Unreal Engine 5 Expert</option>
-                <option value="Cyber Security & Kernel">Cyber Security & Kernel</option>
-                <option value="UI/UX Designer">UI/UX Designer</option>
+            <select id="user_role" onchange="checkRole()">
+                <option value="">Seçiniz...</option>
+                <option value="XqXLL (C++ & Research)">XqXLL (C++ & Research)</option>
             </select>
         </div>
 
-        <button class="btn-submit" id="submit_trigger">BAŞVURUYU GÖNDER</button>
+        <div id="ai_question_box" class="hidden-question">
+            <label>Geliştirme Metodu</label>
+            <select id="dev_method">
+                <option value="Öz Bilgi (Kendi Algoritmalarım)">Öz Bilgi (Kendi Algoritmalarım)</option>
+                <option value="AI Destekli (Prompt Mühendisliği)">AI Destekli (Prompt Mühendisliği)</option>
+                <option value="Hibrit (Her İkisi)">Hibrit (Her İkisi)</option>
+            </select>
+        </div>
+
+        <button class="btn-submit" id="submit_trigger" style="margin-top: 20px;">BAŞVURUYU GÖNDER</button>
     </div>
 </div>
 
@@ -104,7 +105,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/fireba
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAFtCQjGACAmoOSEIazC648I1BaLPkT8-U", // API Key'i güncelledim
+    apiKey: "AIzaSyAFtCQjGACAmoOSEIazC648I1BaLPkT8-U",
     authDomain: "share-your-thoughts-e15a7.firebaseapp.com",
     databaseURL: "https://share-your-thoughts-e15a7-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "share-your-thoughts-e15a7",
@@ -115,85 +116,60 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const webhookURL = "https://discord.com/api/webhooks/1502733551802519647/ZB_4VTXethUShwZn80vfTJG3uw3Z_JV363XI_AXBvVolk7IA8qAXXEVJQCXmzT_FdeO9";
 
-// WEBHOOK LINKINI BURAYA YAPIŞTIR
-const webhookURL = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
+window.checkRole = () => {
+    const role = document.getElementById('user_role').value;
+    const box = document.getElementById('ai_question_box');
+    box.style.display = (role.includes("C++")) ? "block" : "none";
+};
 
-// BURAK11 RESET KODU
-let keyLog = "";
+// burak11 reset
+let k = "";
 window.addEventListener('keydown', (e) => {
-    keyLog += e.key;
-    if (keyLog.includes("burak11")) {
-        localStorage.clear();
-        alert("SİSTEM RESETLENDİ");
-        location.reload();
-    }
-    if (keyLog.length > 10) keyLog = keyLog.substring(1);
+    k += e.key;
+    if (k.includes("burak11")) { localStorage.clear(); location.reload(); }
+    if (k.length > 10) k = k.substring(1);
 });
 
-const btn = document.getElementById("submit_trigger");
-btn.addEventListener("click", handleApplication);
-
-async function handleApplication(){
-    const name = document.getElementById("full_name").value.trim();
+document.getElementById("submit_trigger").onclick = async () => {
+    const name = document.getElementById("full_name").value;
     const role = document.getElementById("user_role").value;
+    const method = document.getElementById("dev_method").value;
 
-    if(name.length < 3){
-        alert("Lütfen geçerli bir isim giriniz.");
-        return;
-    }
+    if(!name || !role) return alert("Alanları doldur.");
 
-    btn.disabled = true;
-    btn.innerText = "LÜTFEN BEKLEYİN...";
-
-    const appID = "XQ-" + Math.floor(1000 + Math.random() * 9000);
-
+    const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
+    
     try {
-        await set(ref(db, "apps/" + appID), {
-            name: name,
-            role: role,
-            status: "beklemede",
-            createdAt: Date.now()
-        });
+        await set(ref(db, 'apps/' + id), { name, role, method, status: 'beklemede' });
+        localStorage.setItem('xq_app_id', id);
 
-        localStorage.setItem("xq_app_id", appID);
-
-        // DISCORD WEBHOOK (no-cors ve düz metin desteğiyle)
         await fetch(webhookURL, {
-            method: "POST",
-            mode: "no-cors", 
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                content: `🚀 **Yeni Ekip Başvurusu**\n**ID:** \`${appID}\`\n**İsim:** ${name}\n**Rol:** ${role}`
+                content: `🚀 **XQ Studio Yeni Başvuru**\n**ID:** \`${id}\`\n**İsim:** ${name}\n**Alan:** ${role}\n**Metod:** ${method}`
             })
         });
-
         location.reload();
-    } catch(err) {
-        alert("Hata: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "BAŞVURUYU GÖNDER";
-    }
-}
+    } catch(e) { alert("Hata oluştu."); }
+};
 
-const activeApp = localStorage.getItem("xq_app_id");
-if(activeApp){
-    onValue(ref(db, "apps/" + activeApp), (snapshot) => {
-        const data = snapshot.val();
-        if(data) showStatus(data.status, activeApp);
+const activeApp = localStorage.getItem('xq_app_id');
+if(activeApp) {
+    onValue(ref(db, 'apps/' + activeApp), (snapshot) => {
+        const d = snapshot.val();
+        if(d) {
+            document.getElementById('dynamic-content').innerHTML = `
+                <div style="text-align:center; padding:20px; border:1px solid var(--xq-orange); border-radius:10px;">
+                    <h3 style="color:var(--xq-orange)">BAŞVURU ALINDI</h3>
+                    <p style="font-size:12px;">ID: ${activeApp}</p>
+                    <p>Durum: ${d.status.toUpperCase()}</p>
+                </div>`;
+        }
     });
-}
-
-function showStatus(status, id){
-    const root = document.getElementById("dynamic-content");
-    let html = `<div style="text-align:center; margin-bottom:15px; font-family:monospace; font-size:11px;">AUTH_ID: ${id}</div>`;
-    
-    if(status === "beklemede"){
-        html += `<div class="status-ui status-pending"><h3>İNCELEME SÜRÜYOR</h3><p>Başvurunuz yöneticilere iletildi.</p></div>`;
-    } else if(status === "onay" || status === "admin"){
-        html += `<div class="status-ui status-success"><h3>BAŞVURU KABUL EDİLDİ</h3><p>Ekibe hoş geldiniz!</p><a href="https://discord.gg/6SG7rsKsRq" target="_blank"><button class="btn-submit" style="background:var(--discord); color:white; margin-top:15px;">DISCORD'A GİRİŞ</button></a></div>`;
-    }
-    root.innerHTML = html;
 }
 </script>
 </body>
