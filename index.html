@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XQ Studio® | Hub & Recruitment</title>
+    <title>XQ Studio® | Developer Hub</title>
     <style>
         :root { 
             --xq-orange: #ff9900; 
@@ -11,8 +11,7 @@
             --card: #0d1117; 
             --border: #30363d; 
             --text: #c9d1d9; 
-            --term-green: #00ff41; 
-            --admin-gold: #ffd700;
+            --text-dim: #8b949e;
             --whatsapp: #25D366;
             --discord: #5865F2;
         }
@@ -20,70 +19,93 @@
             background: var(--bg); 
             background-image: radial-gradient(circle at 50% 0%, #1a1f26 0%, transparent 50%);
             color: var(--text); 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
             margin: 0; 
             padding: 20px; 
             display: flex; 
-            flex-direction: column; 
+            justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
         }
-        .container { 
+        .main-card { 
             background: var(--card); 
             border: 1px solid var(--border); 
-            border-radius: 12px; 
-            padding: 30px; 
+            border-radius: 16px; 
+            padding: 40px; 
             width: 100%; 
-            max-width: 550px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
-            margin-bottom: 20px;
+            max-width: 480px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            position: relative;
         }
-        h1 { color: var(--xq-orange); text-align: center; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
-        .social-links { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
-        .social-btn { flex: 1; padding: 12px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; text-align: center; font-size: 14px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-wa { background: var(--whatsapp); }
-        .btn-dc { background: var(--discord); }
-        .social-btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--xq-orange); margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 800; }
+        .header p { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
 
-        input, select, button.submit-btn { width: 100%; padding: 14px; margin-top: 12px; background: #05070a; border: 1px solid var(--border); border-radius: 6px; color: white; box-sizing: border-box; }
-        button.submit-btn { background: var(--xq-orange); color: black; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
-        
-        .status-badge { padding: 20px; border-radius: 8px; text-align: center; margin-top: 15px; border: 1px solid; }
-        .accepted { border-color: #2ecc71; background: rgba(46, 204, 113, 0.05); }
-        .admin-role { border-color: var(--admin-gold); background: rgba(255, 215, 0, 0.05); }
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .social-link { 
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px; border-radius: 10px; text-decoration: none; color: white;
+            font-weight: 600; font-size: 13px; transition: 0.3s;
+        }
+        .wa { background: var(--whatsapp); }
+        .dc { background: var(--discord); }
+        .social-link:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        .terminal { background: #000; border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 550px; height: 150px; padding: 15px; font-family: monospace; color: var(--term-green); overflow-y: auto; }
-        #term-input { background: transparent; border: none; color: var(--term-green); outline: none; width: 70%; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+        input, select { 
+            width: 100%; padding: 14px; background: #05070a; border: 1px solid var(--border); 
+            border-radius: 8px; color: white; font-size: 15px; box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus, select:focus { border-color: var(--xq-orange); outline: none; background: #0a0c10; }
+
+        .btn-submit { 
+            width: 100%; padding: 16px; background: var(--xq-orange); color: black; 
+            border: none; border-radius: 8px; font-weight: 800; font-size: 15px; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-submit:hover { background: #e68a00; transform: scale(1.02); }
+
+        .status-box { 
+            padding: 30px; border-radius: 12px; text-align: center; border: 1px solid; 
+            animation: fadeIn 0.5s ease;
+        }
+        .onay { border-color: #2ecc71; background: rgba(46, 204, 113, 0.05); color: #2ecc71; }
+        .bekle { border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); color: #f1c40f; }
+        .red { border-color: #e74c3c; background: rgba(231, 76, 60, 0.05); color: #e74c3c; }
+        .admin { border-color: #ffd700; background: rgba(255, 215, 0, 0.05); color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.1); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>XQ STUDIO® HUB</h1>
-    
-    <!-- Sosyal Medya Kanalları -->
-    <div class="social-links">
-        <a href="https://whatsapp.com/channel/0029VbCjhhZ8PgsFTg0Fcd3I" target="_blank" class="social-btn btn-wa">WHATSAPP KANALI</a>
-        <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-btn btn-dc">DISCORD</a>
+<div class="main-card">
+    <div class="header">
+        <h1>XQ STUDIO®</h1>
+        <p>Geleceği Birlikte İnşa Edelim</p>
     </div>
 
-    <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
+    <div id="app-content">
+        <div class="social-grid">
+            <a href="https://whatsapp.com/channel/0029VbCjhhZ8PgsFTg0Fcd3I" target="_blank" class="social-link wa">WhatsApp Kanalı</a>
+            <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-link dc">Discord Sunucusu</a>
+        </div>
 
-    <div id="ui-content">
-        <p style="text-align: center; font-size: 13px; color: #8b949e;">RESMİ BAŞVURU PANELİ</p>
-        <input type="text" id="name" placeholder="Ad Soyad">
-        <input type="number" id="age" placeholder="Yaş">
-        <select id="role">
-            <option value="Developer">Geliştirici (XqXLL / sCs++)</option>
-            <option value="Security">Güvenlik & Analiz</option>
-        </select>
-        <button class="submit-btn" onclick="submitForm()">BAŞVURUYU GÖNDER</button>
+        <div class="form-group">
+            <label>Ad Soyad</label>
+            <input type="text" id="name" placeholder="Örn: Burak Yılmaz">
+        </div>
+        <div class="form-group">
+            <label>Uzmanlık Alanı</label>
+            <select id="role">
+                <option value="Developer">Geliştirici (C++ / Unreal)</option>
+                <option value="Security">Güvenlik & Analiz</option>
+                <option value="Design">UI/UX & Grafik Tasarım</option>
+            </select>
+        </div>
+        <button class="btn-submit" onclick="submitApp()">Başvuruyu Tamamla</button>
     </div>
-</div>
-
-<div class="terminal" onclick="document.getElementById('term-input').focus()">
-    <div id="term-history"><div>XQ_OS v1.0.6 Online.</div></div>
-    <span>XQ@ROOT:~$</span> <input type="text" id="term-input" autocomplete="off">
 </div>
 
 <script type="module">
@@ -107,62 +129,49 @@
     if (savedID) {
         onValue(ref(db, 'apps/' + savedID), (snapshot) => {
             const data = snapshot.val();
-            if (data) updateUIStatus(data.status, savedID);
+            if (data) renderStatus(data.status, savedID);
         });
     }
 
-    function updateUIStatus(status, id) {
-        let html = `<div style="text-align:center; color:var(--xq-orange); margin-bottom:10px;">ID: ${id}</div>`;
+    function renderStatus(status, id) {
+        const root = document.getElementById('app-content');
+        let content = `<div style="text-align:center; margin-bottom:20px; font-size:12px; color:var(--text-dim)">ID: ${id}</div>`;
+        
         if(status === 'beklemede') {
-            html += `<div class="status-badge" style="color:#f1c40f;">⏳ İNCELENİYOR...</div>`;
+            content += `<div class="status-box bekle"><h3>BAŞVURU İNCELENİYOR</h3><p>5 gün içerisinde yanıt alacaksınız.</p></div>`;
         } else if(status === 'onay' || status === 'admin') {
-            const isAdmin = status === 'admin';
-            html += `<div class="status-badge ${isAdmin ? 'admin-role' : 'accepted'}">
-                        <div style="font-weight:bold; color:${isAdmin ? 'var(--admin-gold)' : '#2ecc71'}">${isAdmin ? '👑 ADMIN YETKİSİ' : '✅ KABUL EDİLDİN!'}</div>
-                        <p style="font-size:12px;">Ekibe katılımın onaylandı. Kanallara giriş yapabilirsin.</p>
-                        <div class="social-links">
-                            <a href="https://discord.gg/uvTBAErp" target="_blank" class="social-btn btn-dc">DISCORD'A GİR</a>
-                        </div>
-                        ${isAdmin ? '<div style="margin-top:10px; font-family:monospace; font-size:14px; color:var(--admin-gold)">KOD: XQ-ADM-CORE-2026</div>' : ''}
-                     </div>`;
+            const isAdm = status === 'admin';
+            content += `<div class="status-box ${isAdm ? 'admin' : 'onay'}">
+                <h3>${isAdm ? '👑 YÖNETİCİ ONAYI' : '✅ KABUL EDİLDİNİZ'}</h3>
+                <p>XQ Studio ekibine hoş geldiniz.</p>
+                <a href="https://discord.gg/6SG7rsKsRq" target="_blank" style="text-decoration:none">
+                    <button class="btn-submit" style="background:#5865F2; color:white">DISCORD'A GİRİŞ YAP</button>
+                </a>
+                ${isAdm ? '<div style="margin-top:15px; font-family:monospace">KOD: XQ-ADM-CORE-2026</div>' : ''}
+            </div>`;
         } else if(status === 'red') {
-            html += `<div class="status-badge" style="color:#e74c3c; border-color:#e74c3c;">❌ REDDEDİLDİ</div>`;
+            content += `<div class="status-box red"><h3>BAŞVURU REDDEDİLDİ</h3><p>Kriterlerimize şu an uygun bulunmadınız.</p></div>`;
         }
-        document.getElementById('ui-content').innerHTML = html;
+        root.innerHTML = content;
     }
 
-    window.submitForm = async () => {
+    window.submitApp = async () => {
         const name = document.getElementById('name').value;
-        const age = document.getElementById('age').value;
         const role = document.getElementById('role').value;
-        if(!name || !age) return alert("Bilgileri doldur!");
+        if(!name) return alert("Lütfen adınızı girin.");
 
-        const appID = "XQ-" + Math.floor(1000 + Math.random() * 9000);
-        localStorage.setItem('xq_app_id', appID);
-        await set(ref(db, 'apps/' + appID), { name, age, role, status: 'beklemede' });
+        const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
+        localStorage.setItem('xq_app_id', id);
         
-        // Discord Webhook
+        await set(ref(db, 'apps/' + id), { name, role, status: 'beklemede' });
+        
         fetch("https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ content: `🚀 **Yeni Başvuru:** ${appID}\nİsim: ${name}\nRol: ${role}` })
+            body: JSON.stringify({ content: `🚀 **Yeni Başvuru:** \`${id}\`\n**İsim:** ${name}\n**Rol:** ${role}` })
         });
         location.reload();
     };
-
-    document.getElementById('term-input').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const val = e.target.value.trim();
-            const hist = document.getElementById('term-history');
-            if (val === '.help') hist.innerHTML += `<div>> .help, /kaynaklar, /paketler</div>`;
-            else if (val === 'burak11') {
-                localStorage.clear();
-                hist.innerHTML += `<div style="color:yellow">> [SİSTEM SIFIRLANDI]</div>`;
-                setTimeout(() => location.reload(), 1000);
-            }
-            e.target.value = '';
-        }
-    });
 </script>
 </body>
 </html>
