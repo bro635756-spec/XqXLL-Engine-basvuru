@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XQ Studio® | Developer Hub</title>
+    <title>XQ Studio® | Hub</title>
     <style>
         :root { 
             --xq-orange: #ff9900; 
@@ -12,70 +12,44 @@
             --border: #30363d; 
             --text: #c9d1d9; 
             --text-dim: #8b949e;
-            --whatsapp: #25D366;
             --discord: #5865F2;
         }
         body { 
             background: var(--bg); 
             background-image: radial-gradient(circle at 50% 0%, #1a1f26 0%, transparent 50%);
             color: var(--text); 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 20px; 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
         }
         .main-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            padding: 40px; 
-            width: 100%; 
-            max-width: 480px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
-            position: relative;
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
+            padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
         }
         .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--xq-orange); margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: 800; }
-        .header p { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
-
-        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .header h1 { color: var(--xq-orange); margin: 0; font-size: 26px; letter-spacing: 2px; }
+        
         .social-link { 
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: flex; align-items: center; justify-content: center; 
             padding: 14px; border-radius: 10px; text-decoration: none; color: white;
-            font-weight: 600; font-size: 13px; transition: 0.3s;
+            font-weight: 600; background: var(--discord); margin-bottom: 25px; transition: 0.3s;
         }
-        .wa { background: var(--whatsapp); }
-        .dc { background: var(--discord); }
-        .social-link:hover { transform: translateY(-2px); opacity: 0.9; }
+        .social-link:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; }
         input, select { 
-            width: 100%; padding: 14px; background: #05070a; border: 1px solid var(--border); 
-            border-radius: 8px; color: white; font-size: 15px; box-sizing: border-box; transition: 0.3s;
+            width: 100%; padding: 12px; background: #0b0e14; border: 1px solid var(--border); 
+            border-radius: 8px; color: white; box-sizing: border-box; 
         }
-        input:focus, select:focus { border-color: var(--xq-orange); outline: none; background: #0a0c10; }
-
         .btn-submit { 
-            width: 100%; padding: 16px; background: var(--xq-orange); color: black; 
-            border: none; border-radius: 8px; font-weight: 800; font-size: 15px; 
-            cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 10px;
+            width: 100%; padding: 15px; background: var(--xq-orange); color: black; 
+            border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px;
         }
-        .btn-submit:hover { background: #e68a00; transform: scale(1.02); }
 
-        .status-box { 
-            padding: 30px; border-radius: 12px; text-align: center; border: 1px solid; 
-            animation: fadeIn 0.5s ease;
-        }
-        .onay { border-color: #2ecc71; background: rgba(46, 204, 113, 0.05); color: #2ecc71; }
-        .bekle { border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); color: #f1c40f; }
-        .red { border-color: #e74c3c; background: rgba(231, 76, 60, 0.05); color: #e74c3c; }
-        .admin { border-color: #ffd700; background: rgba(255, 215, 0, 0.05); color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.1); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .status-box { padding: 25px; border-radius: 12px; text-align: center; border: 1px solid; }
+        .onay { border-color: #2ecc71; color: #2ecc71; background: rgba(46, 204, 113, 0.05); }
+        .bekle { border-color: #f1c40f; color: #f1c40f; background: rgba(241, 196, 15, 0.05); }
     </style>
 </head>
 <body>
@@ -83,28 +57,24 @@
 <div class="main-card">
     <div class="header">
         <h1>XQ STUDIO®</h1>
-        <p>Geleceği Birlikte İnşa Edelim</p>
+        <p style="font-size: 12px; color: var(--text-dim);">Merkezi Yönetim Sistemi</p>
     </div>
 
     <div id="app-content">
-        <div class="social-grid">
-            <a href="https://whatsapp.com/channel/0029VbCjhhZ8PgsFTg0Fcd3I" target="_blank" class="social-link wa">WhatsApp Kanalı</a>
-            <a href="https://discord.gg/sZZFm7Gg4X" target="_blank" class="social-link dc">Discord Sunucusu</a>
-        </div>
+        <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-link">DISCORD SUNUCUSUNA KATIL</a>
 
         <div class="form-group">
             <label>Ad Soyad</label>
-            <input type="text" id="name" placeholder="Örn: Burak Yılmaz">
+            <input type="text" id="name" placeholder="Adınızı girin">
         </div>
         <div class="form-group">
-            <label>Uzmanlık Alanı</label>
+            <label>Departman</label>
             <select id="role">
-                <option value="Developer">Geliştirici (C++ / Unreal)</option>
-                <option value="Security">Güvenlik & Analiz</option>
-                <option value="Design">UI/UX & Grafik Tasarım</option>
+                <option value="Developer">Yazılım Geliştirme (C++)</option>
+                <option value="Security">Güvenlik & Kernel Analiz</option>
             </select>
         </div>
-        <button class="btn-submit" onclick="submitApp()">Başvuruyu Tamamla</button>
+        <button class="btn-submit" onclick="submitApp()">BAŞVURUYU İLET</button>
     </div>
 </div>
 
@@ -124,6 +94,19 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const webhookURL = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
+
+    // "burak11" gizli kodu dinleme
+    let inputBuffer = "";
+    window.addEventListener('keydown', (e) => {
+        inputBuffer += e.key;
+        if (inputBuffer.includes("burak11")) {
+            localStorage.clear();
+            alert("Sistem Kurucusu Burak Tarafından Sıfırlandı.");
+            location.reload();
+        }
+        if (inputBuffer.length > 20) inputBuffer = inputBuffer.substring(10);
+    });
 
     const savedID = localStorage.getItem('xq_app_id');
     if (savedID) {
@@ -135,41 +118,48 @@
 
     function renderStatus(status, id) {
         const root = document.getElementById('app-content');
-        let content = `<div style="text-align:center; margin-bottom:20px; font-size:12px; color:var(--text-dim)">ID: ${id}</div>`;
+        let html = `<div style="text-align:center; margin-bottom:15px; font-size:12px; color:var(--text-dim)">KAYIT NO: ${id}</div>`;
         
         if(status === 'beklemede') {
-            content += `<div class="status-box bekle"><h3>BAŞVURU İNCELENİYOR</h3><p>5 gün içerisinde yanıt alacaksınız.</p></div>`;
+            html += `<div class="status-box bekle"><h3>BAŞVURU İNCELENİYOR</h3><p>Sonuçlar sisteme yansıtılacaktır.</p></div>`;
         } else if(status === 'onay' || status === 'admin') {
-            const isAdm = status === 'admin';
-            content += `<div class="status-box ${isAdm ? 'admin' : 'onay'}">
-                <h3>${isAdm ? '👑 YÖNETİCİ ONAYI' : '✅ KABUL EDİLDİNİZ'}</h3>
-                <p>XQ Studio ekibine hoş geldiniz.</p>
+            html += `<div class="status-box onay">
+                <h3>BAŞVURU ONAYLANDI</h3>
                 <a href="https://discord.gg/6SG7rsKsRq" target="_blank" style="text-decoration:none">
-                    <button class="btn-submit" style="background:#5865F2; color:white">DISCORD'A GİRİŞ YAP</button>
+                    <button class="btn-submit" style="background:#5865F2; color:white">DISCORD KATILIM</button>
                 </a>
-                ${isAdm ? '<div style="margin-top:15px; font-family:monospace">KOD: XQ-ADM-CORE-2026</div>' : ''}
             </div>`;
-        } else if(status === 'red') {
-            content += `<div class="status-box red"><h3>BAŞVURU REDDEDİLDİ</h3><p>Kriterlerimize şu an uygun bulunmadınız.</p></div>`;
         }
-        root.innerHTML = content;
+        root.innerHTML = html;
     }
 
     window.submitApp = async () => {
         const name = document.getElementById('name').value;
         const role = document.getElementById('role').value;
-        if(!name) return alert("Lütfen adınızı girin.");
+        if(!name) return alert("Lütfen isim giriniz.");
 
         const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
         localStorage.setItem('xq_app_id', id);
         
         await set(ref(db, 'apps/' + id), { name, role, status: 'beklemede' });
         
-        fetch("https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4", {
+        // Discord Webhook Gönderimi
+        fetch(webhookURL, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ content: `🚀 **Yeni Başvuru:** \`${id}\`\n**İsim:** ${name}\n**Rol:** ${role}` })
-        });
+            body: JSON.stringify({
+                embeds: [{
+                    title: "🚀 Yeni Ekip Başvurusu",
+                    color: 16750848,
+                    fields: [
+                        { name: "ID", value: id, inline: true },
+                        { name: "İsim", value: name, inline: true },
+                        { name: "Rol", value: role, inline: true }
+                    ]
+                }]
+            })
+        }).catch(err => console.log("Webhook hatası:", err));
+
         location.reload();
     };
 </script>
