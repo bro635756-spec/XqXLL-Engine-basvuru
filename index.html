@@ -21,13 +21,15 @@
             font-family: 'Inter', sans-serif; 
             margin: 0; padding: 20px; 
             display: flex; justify-content: center; align-items: center; min-height: 100vh; 
+            overflow: hidden;
         }
         .main-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
-            padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.7); 
+            z-index: 10;
         }
         .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--xq-orange); margin: 0; font-size: 26px; letter-spacing: 2px; }
+        .header h1 { color: var(--xq-orange); margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 800; }
         
         .social-link { 
             display: flex; align-items: center; justify-content: center; 
@@ -37,19 +39,25 @@
         .social-link:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; }
+        label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
         input, select { 
             width: 100%; padding: 12px; background: #0b0e14; border: 1px solid var(--border); 
-            border-radius: 8px; color: white; box-sizing: border-box; 
+            border-radius: 8px; color: white; box-sizing: border-box; outline: none;
         }
+        input:focus { border-color: var(--xq-orange); }
+
         .btn-submit { 
             width: 100%; padding: 15px; background: var(--xq-orange); color: black; 
             border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px;
+            transition: 0.2s;
         }
+        .btn-submit:active { transform: scale(0.98); }
 
-        .status-box { padding: 25px; border-radius: 12px; text-align: center; border: 1px solid; }
+        .status-box { padding: 25px; border-radius: 12px; text-align: center; border: 1px solid; animation: slideIn 0.4s ease; }
         .onay { border-color: #2ecc71; color: #2ecc71; background: rgba(46, 204, 113, 0.05); }
         .bekle { border-color: #f1c40f; color: #f1c40f; background: rgba(241, 196, 15, 0.05); }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -57,24 +65,25 @@
 <div class="main-card">
     <div class="header">
         <h1>XQ STUDIO®</h1>
-        <p style="font-size: 12px; color: var(--text-dim);">Merkezi Yönetim Sistemi</p>
+        <p style="font-size: 12px; color: var(--text-dim);">Merkezi Başvuru Sistemi</p>
     </div>
 
     <div id="app-content">
-        <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-link">DISCORD SUNUCUSUNA KATIL</a>
+        <a href="https://discord.gg/6SG7rsKsRq" target="_blank" class="social-link">RESMİ DISCORD SUNUCUSU</a>
 
         <div class="form-group">
-            <label>Ad Soyad</label>
-            <input type="text" id="name" placeholder="Adınızı girin">
+            <label>AD SOYAD</label>
+            <input type="text" id="name" placeholder="Adınızı giriniz">
         </div>
         <div class="form-group">
-            <label>Departman</label>
+            <label>UZMANLIK ALANI</label>
             <select id="role">
-                <option value="Developer">Yazılım Geliştirme (C++)</option>
-                <option value="Security">Güvenlik & Kernel Analiz</option>
+                <option value="Developer">Yazılım Geliştirici (XqXLL / C++)</option>
+                <option value="Security">Sistem Güvenliği & Kernel</option>
+                <option value="Design">UI/UX Tasarım</option>
             </select>
         </div>
-        <button class="btn-submit" onclick="submitApp()">BAŞVURUYU İLET</button>
+        <button class="btn-submit" id="submitBtn" onclick="submitApp()">BAŞVURUYU GÖNDER</button>
     </div>
 </div>
 
@@ -96,16 +105,16 @@
     const db = getDatabase(app);
     const webhookURL = "https://discord.com/api/webhooks/1502681995225071617/ge4mxaUjCtTh7_ytO_xkrN8k4uJgcsoGPU2_d3E7bMHGQL_B7ONhmR1sr9ZMxbQ4ElQ4";
 
-    // "burak11" gizli kodu dinleme
-    let inputBuffer = "";
-    window.addEventListener('keydown', (e) => {
-        inputBuffer += e.key;
-        if (inputBuffer.includes("burak11")) {
+    // GİZLİ SIFIRLAMA KODU: burak11
+    let secret = "";
+    window.addEventListener('keypress', (e) => {
+        secret += e.key;
+        if (secret.includes("burak11")) {
             localStorage.clear();
-            alert("Sistem Kurucusu Burak Tarafından Sıfırlandı.");
+            alert("SİSTEM KURUCUSU TARAFINDAN RESETLENDİ.");
             location.reload();
         }
-        if (inputBuffer.length > 20) inputBuffer = inputBuffer.substring(10);
+        if (secret.length > 10) secret = secret.substring(1);
     });
 
     const savedID = localStorage.getItem('xq_app_id');
@@ -118,15 +127,16 @@
 
     function renderStatus(status, id) {
         const root = document.getElementById('app-content');
-        let html = `<div style="text-align:center; margin-bottom:15px; font-size:12px; color:var(--text-dim)">KAYIT NO: ${id}</div>`;
+        let html = `<div style="text-align:center; margin-bottom:15px; font-size:12px; color:var(--text-dim); font-family:monospace;">SESSION_ID: ${id}</div>`;
         
         if(status === 'beklemede') {
-            html += `<div class="status-box bekle"><h3>BAŞVURU İNCELENİYOR</h3><p>Sonuçlar sisteme yansıtılacaktır.</p></div>`;
+            html += `<div class="status-box bekle"><h3>BEKLEMEDE</h3><p>Verileriniz XQ Studio havuzuna eklendi.</p></div>`;
         } else if(status === 'onay' || status === 'admin') {
             html += `<div class="status-box onay">
-                <h3>BAŞVURU ONAYLANDI</h3>
+                <h3>ERİŞİM ONAYLANDI</h3>
+                <p>Ekip grubuna katılmaya hak kazandınız.</p>
                 <a href="https://discord.gg/6SG7rsKsRq" target="_blank" style="text-decoration:none">
-                    <button class="btn-submit" style="background:#5865F2; color:white">DISCORD KATILIM</button>
+                    <button class="btn-submit" style="background:#5865F2; color:white">SUNUCUYA GİRİŞ YAP</button>
                 </a>
             </div>`;
         }
@@ -136,31 +146,37 @@
     window.submitApp = async () => {
         const name = document.getElementById('name').value;
         const role = document.getElementById('role').value;
-        if(!name) return alert("Lütfen isim giriniz.");
+        const btn = document.getElementById('submitBtn');
+
+        if(!name || name.length < 3) return alert("Lütfen geçerli bir isim girin.");
+
+        btn.disabled = true;
+        btn.innerText = "GÖNDERİLİYOR...";
 
         const id = "XQ-" + Math.floor(1000 + Math.random() * 9000);
-        localStorage.setItem('xq_app_id', id);
         
-        await set(ref(db, 'apps/' + id), { name, role, status: 'beklemede' });
-        
-        // Discord Webhook Gönderimi
-        fetch(webhookURL, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                embeds: [{
-                    title: "🚀 Yeni Ekip Başvurusu",
-                    color: 16750848,
-                    fields: [
-                        { name: "ID", value: id, inline: true },
-                        { name: "İsim", value: name, inline: true },
-                        { name: "Rol", value: role, inline: true }
-                    ]
-                }]
-            })
-        }).catch(err => console.log("Webhook hatası:", err));
+        try {
+            // 1. Firebase Kaydı
+            await set(ref(db, 'apps/' + id), { name, role, status: 'beklemede' });
+            localStorage.setItem('xq_app_id', id);
 
-        location.reload();
+            // 2. Discord Webhook (Keep-Alive ile zorunlu gönderim)
+            await fetch(webhookURL, {
+                method: 'POST',
+                mode: 'no-cors', // CORS engelini aşmak için 'no-cors' kullanılır
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `🚀 **XQ Studio Yeni Başvuru**\n**ID:** \`${id}\`\n**İsim:** ${name}\n**Rol:** ${role}\n-------------------------`
+                })
+            });
+
+            location.reload();
+        } catch (err) {
+            console.error(err);
+            alert("Bir hata oluştu, tekrar deneyin.");
+            btn.disabled = false;
+            btn.innerText = "BAŞVURUYU GÖNDER";
+        }
     };
 </script>
 </body>
